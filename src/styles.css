@@ -1,0 +1,647 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --ink: #f8f4e8;
+  --muted: #b6c5bc;
+  --panel: rgba(14, 18, 22, 0.78);
+  --line: rgba(255, 255, 255, 0.16);
+  --accent: #27f5b9;
+  --accent-2: #ffd84d;
+  --action: #ff7a2f;
+  --gold: #ffd84d;
+  background: #000;
+  color: var(--ink);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ============================================================
+   App Shell — Fullscreen
+   ============================================================ */
+
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Topbar — Fade out after 3s
+   ============================================================ */
+
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 24px;
+  pointer-events: none;
+  animation: fadeOut 1.5s ease-out 3s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #00e5ff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 8px rgba(0, 229, 255, 0.8),
+    0 0 24px rgba(0, 229, 255, 0.4),
+    0 0 48px rgba(0, 229, 255, 0.2);
+  animation: cyberFlicker 3s ease-in-out infinite alternate;
+}
+
+h1 {
+  margin: 0;
+  background: linear-gradient(90deg, #00e5ff, #a855f7, #ff00e5, #00e5ff);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: cyberGradient 4s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.5)) drop-shadow(0 0 30px rgba(0, 229, 255, 0.3));
+}
+
+@keyframes cyberGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes cyberFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.status {
+  max-width: 300px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(39, 245, 185, 0.28);
+  border-radius: 8px;
+  background: rgba(7, 9, 11, 0.82);
+  color: #fff7d1;
+  font-size: 13px;
+  line-height: 1.35;
+  backdrop-filter: blur(14px);
+}
+
+/* ============================================================
+   Stage — Fullscreen Video
+   ============================================================ */
+
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+#camera {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+#output {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#debug-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Dynamic Island
+   ============================================================ */
+
+.dynamic-island {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 216, 77, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dynamic-island.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-20px);
+  pointer-events: none;
+}
+
+.dynamic-island .island-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.dynamic-island .island-effect {
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(255, 216, 77, 0.5);
+}
+
+/* Shake animation */
+@keyframes islandShake {
+  0% { transform: translateX(-50%) translateY(0); }
+  15% { transform: translateX(-50%) translateY(3px); }
+  45% { transform: translateX(-50%) translateY(-2px); }
+  75% { transform: translateX(-50%) translateY(1px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+.dynamic-island.shaking {
+  animation: islandShake 0.3s ease-out;
+}
+
+/* ============================================================
+   Status Label (bottom center, small)
+   ============================================================ */
+
+.status-label {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.status-label.visible {
+  opacity: 1;
+}
+
+/* ============================================================
+   Menu Overlay
+   ============================================================ */
+
+.menu-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 60px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-title {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Menu Close Button — top-right, dwell 3s to close
+   ============================================================ */
+
+.menu-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  pointer-events: auto;
+}
+
+/* Dwell progress ring on close button */
+.menu-close-btn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--gold) calc(var(--dwell-progress, 0) * 1%), transparent 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 4px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.menu-close-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.menu-close-btn:hover,
+.menu-close-btn.hovered {
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--gold);
+  transform: scale(1.1);
+}
+
+.menu-close-btn.hovered::before {
+  opacity: 1;
+}
+
+/* ============================================================
+   Filter Blocks Grid
+   ============================================================ */
+
+.filter-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 90vw;
+  padding: 0 20px;
+}
+
+.filter-block {
+  position: relative;
+  width: 80px;
+  height: 100px;
+  border-radius: 12px;
+  border: 4px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+}
+
+/* Dwell progress border — thick, drawn by conic-gradient */
+.filter-block::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 18px;
+  background: conic-gradient(from 0deg, var(--gold) calc(var(--dwell-progress, 0) * 1%), transparent 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 7px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.filter-block.hovered {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 216, 77, 0.3);
+}
+
+.filter-block.hovered::before {
+  opacity: 1;
+}
+
+/* Selected: keep gold border glow and keep showing */
+.filter-block.selected {
+  border-color: var(--gold);
+  background: rgba(255, 216, 77, 0.15);
+  box-shadow: 0 0 30px rgba(255, 216, 77, 0.4);
+  transform: scale(1.08);
+}
+
+.filter-block.selected::before {
+  opacity: 0;
+}
+
+.filter-block .block-preview {
+  width: 100%;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.filter-block .block-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   Swipe Up Arrow / Progress
+   ============================================================ */
+
+.swipe-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.swipe-indicator.visible {
+  opacity: 1;
+}
+
+.swipe-arrow {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 18px solid rgba(255, 216, 77, 0.6);
+  filter: drop-shadow(0 0 8px rgba(255, 216, 77, 0.4));
+}
+
+.swipe-progress {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.swipe-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--gold);
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px rgba(255, 216, 77, 0.5);
+}
+
+/* ============================================================
+   Cursor
+   ============================================================ */
+
+.menu-cursor {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: rgba(255, 216, 77, 0.3);
+  box-shadow: 0 0 12px rgba(255, 216, 77, 0.4);
+  z-index: 110;
+  pointer-events: none;
+  transition: transform 0.05s ease-out;
+}
+
+/* ============================================================
+   Region Border Pulse (menu mode)
+   ============================================================ */
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.6; }
+}
+
+.region-pulse {
+  animation: borderPulse 1s ease-in-out infinite;
+}
+
+/* ============================================================
+   Controls (hidden by default, shown for debug)
+   ============================================================ */
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+  display: none;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.controls.debug-visible {
+  display: flex;
+}
+
+.effect-pickers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.effect-picker {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+}
+
+.effect-picker label {
+  overflow: hidden;
+  color: #f9ecc7;
+  font-size: 12px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.effect-picker select {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(8, 10, 12, 0.94);
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+}
+
+.locked-frame-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 100px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+}
+
+.locked-frame-display .locked-label {
+  color: #f9ecc7;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.locked-frame-display .locked-effect {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.debug-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+}
+
+.debug-toggle input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ============================================================
+   Stage Badge (3 dots)
+   ============================================================ */
+
+.stage-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.stage-badge span {
+  width: 34px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent-2);
+  box-shadow: 0 0 16px rgba(255, 216, 77, 0.62);
+}
+
+.stage-badge span:nth-child(2) {
+  background: var(--accent);
+}
+
+.stage-badge span:nth-child(3) {
+  background: var(--action);
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

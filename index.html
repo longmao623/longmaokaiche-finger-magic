@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta
+      name="description"
+      content="Magic"
+    />
+    <title>Magic</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <!-- Topbar — fades out after 3s -->
+      <div class="topbar" id="topbar">
+        <div>
+          <p class="eyebrow">Magic</p>
+          <h1>FINGER MAGIC</h1>
+        </div>
+        <p id="status" class="status" role="status">正在加载手势追踪器...</p>
+      </div>
+
+      <!-- Stage — Fullscreen -->
+      <section class="stage" id="stage" aria-label="实时 Magic 摄像头">
+        <video id="camera" playsinline muted></video>
+        <canvas id="output"></canvas>
+        <canvas id="debug-canvas" aria-hidden="true"></canvas>
+
+        <!-- Dynamic Island — always visible during lock mode -->
+        <div class="dynamic-island hidden" id="dynamic-island">
+          <span class="island-label">锁定框</span>
+          <span class="island-effect" id="island-effect-name">—</span>
+        </div>
+
+        <!-- Status Label — bottom center, small, auto fade -->
+        <div class="status-label" id="status-label"></div>
+
+        <!-- Swipe Up Indicator -->
+        <div class="swipe-indicator" id="swipe-indicator">
+          <div class="swipe-arrow"></div>
+          <div class="swipe-progress">
+            <div class="swipe-progress-fill" id="swipe-progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- Menu Overlay -->
+        <div class="menu-overlay" id="menu-overlay">
+          <div class="menu-close-btn" id="menu-close-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18"/>
+            </svg>
+          </div>
+          <div class="menu-title">选择滤镜</div>
+          <div class="filter-blocks" id="filter-blocks"></div>
+        </div>
+
+        <!-- Menu Cursor -->
+        <div class="menu-cursor hidden" id="menu-cursor"></div>
+
+        <!-- Stage Badge (3 dots) -->
+        <div class="stage-badge" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </section>
+
+      <!-- Controls — hidden by default, debug only -->
+      <div class="controls" aria-label="区域特效控制" id="controls">
+        <div class="effect-pickers" id="effect-pickers"></div>
+        <label class="debug-toggle">
+          <input id="debug-toggle" type="checkbox" />
+          <span>调试</span>
+        </label>
+      </div>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

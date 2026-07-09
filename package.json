@@ -1,0 +1,13 @@
+{
+  "name": "finger-magic-lite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/hand-geometry.test.js test/effect-selection.test.js test/frame-mode-state.test.js test/webgl-renderer-effects.test.js",
+    "serve": "npx http-server . -p 4173 -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
