@@ -633,6 +633,173 @@ h1 {
 }
 
 /* ============================================================
+   Onboarding
+   ============================================================ */
+
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  opacity: 1;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  visibility: visible;
+}
+
+.onboarding-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 28px 24px;
+  border-radius: 20px;
+  background: rgba(14, 18, 22, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  text-align: center;
+  animation: cardIn 0.5s ease-out;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)     scale(1); }
+}
+
+.onboarding-icon {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 16px;
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.onboarding-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #00e5ff, #a855f7, #ff00e5);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: cyberGradient 3s linear infinite;
+}
+
+.onboarding-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(248, 244, 232, 0.75);
+  margin-bottom: 4px;
+}
+
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px 0 20px;
+}
+
+.onboarding-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.onboarding-dots span.active {
+  background: var(--gold);
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(255, 216, 77, 0.5);
+}
+
+.onboarding-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.onboarding-btn {
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.onboarding-btn:hover {
+  transform: scale(1.05);
+}
+
+.onboarding-btn.primary {
+  background: linear-gradient(135deg, #00e5ff, #a855f7);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 229, 255, 0.3);
+}
+
+.onboarding-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(248, 244, 232, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   Help Button
+   ============================================================ */
+
+.help-btn {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 150;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.help-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.help-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--gold);
+  border-color: rgba(255, 216, 77, 0.3);
+  transform: scale(1.1);
+}
+
+/* ============================================================
    Reduced motion
    ============================================================ */
 

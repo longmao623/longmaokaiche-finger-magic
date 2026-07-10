@@ -43,6 +43,95 @@ const menuCloseBtn = document.querySelector("#menu-close-btn");
 const filterBlocksContainer = document.querySelector("#filter-blocks");
 const menuCursorEl = document.querySelector("#menu-cursor");
 
+// Onboarding DOM
+const onboardingOverlay = document.querySelector("#onboarding-overlay");
+const onboardingStepContent = document.querySelector("#onboarding-step-content");
+const onboardingIcon = document.querySelector("#onboarding-icon");
+const onboardingTitle = document.querySelector("#onboarding-title");
+const onboardingDesc = document.querySelector("#onboarding-desc");
+const onboardingDots = document.querySelector("#onboarding-dots");
+const onboardingNextBtn = document.querySelector("#onboarding-next");
+const onboardingSkipBtn = document.querySelector("#onboarding-skip");
+const helpBtn = document.querySelector("#help-btn");
+
+// Onboarding data
+const ONBOARDING_STEPS = [
+  {
+    icon: "👋",
+    title: "欢迎使用手指魔法",
+    desc: "打开摄像头，用手势实时添加漫画风、赛博朋克等 11 种特效滤镜。"
+  },
+  {
+    icon: "🙌",
+    title: "双手张开启动",
+    desc: "举起双手，五指自然张开。系统会自动识别你的双手，在指缝间生成三个特效区域。"
+  },
+  {
+    icon: "👆",
+    title: "拇指-食指框住焦点",
+    desc: "用拇指和食指比出「L」形框住画面中的主体，该区域会被单独锁定为特效焦点。"
+  },
+  {
+    icon: "✌️",
+    title: "捏合切换 · 上滑选色",
+    desc: "拇指和食指捏合可切换当前锁定框的滤镜；从画面底部向上滑，打开菜单选择其他滤镜。"
+  },
+  {
+    icon: "🎉",
+    title: "开始玩吧！",
+    desc: "三个区域各自独立，锁定框跟随你的焦点。随时点右上角「?」可以再看一遍说明。"
+  }
+];
+let onboardingStep = 0;
+
+function showOnboardingStep(index) {
+  onboardingStep = index;
+  const step = ONBOARDING_STEPS[index];
+  onboardingIcon.textContent = step.icon;
+  onboardingTitle.textContent = step.title;
+  onboardingDesc.textContent = step.desc;
+
+  // Update dots
+  const dots = onboardingDots.querySelectorAll("span");
+  dots.forEach((d, i) => d.classList.toggle("active", i === index));
+
+  // Button text
+  onboardingNextBtn.textContent = index === ONBOARDING_STEPS.length - 1 ? "开始体验" : "下一步";
+  onboardingSkipBtn.textContent = index === ONBOARDING_STEPS.length - 1 ? "" : "跳过";
+  onboardingSkipBtn.style.visibility = index === ONBOARDING_STEPS.length - 1 ? "hidden" : "visible";
+}
+
+function nextOnboardingStep() {
+  if (onboardingStep < ONBOARDING_STEPS.length - 1) {
+    showOnboardingStep(onboardingStep + 1);
+  } else {
+    closeOnboarding();
+  }
+}
+
+function closeOnboarding() {
+  onboardingOverlay.classList.add("hidden");
+  helpBtn.classList.add("visible");
+}
+
+function openOnboarding() {
+  onboardingOverlay.classList.remove("hidden");
+  helpBtn.classList.remove("visible");
+  showOnboardingStep(0);
+}
+
+function initOnboarding() {
+  // Show help button after topbar fades (3s)
+  setTimeout(() => helpBtn.classList.add("visible"), 3500);
+
+  onboardingNextBtn.addEventListener("click", nextOnboardingStep);
+  onboardingSkipBtn.addEventListener("click", closeOnboarding);
+  helpBtn.addEventListener("click", openOnboarding);
+
+  // Start at step 0
+  showOnboardingStep(0);
+}
+
 // State
 let renderer;
 let handLandmarker;
@@ -728,6 +817,7 @@ function bindControls() {
 
 async function main() {
   try {
+    initOnboarding();
     bindControls();
     renderer = new FingerMagicRenderer(canvas);
 

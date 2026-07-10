@@ -11,6 +11,26 @@
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
+    <!-- Onboarding Overlay -->
+    <div class="onboarding-overlay" id="onboarding-overlay">
+      <div class="onboarding-card">
+        <div class="onboarding-step-content" id="onboarding-step-content">
+          <div class="onboarding-icon" id="onboarding-icon">👋</div>
+          <h2 class="onboarding-title" id="onboarding-title">欢迎使用手指魔法</h2>
+          <p class="onboarding-desc" id="onboarding-desc">打开摄像头，用手势实时添加漫画风、赛博朋克等 11 种特效滤镜。</p>
+        </div>
+        <div class="onboarding-dots" id="onboarding-dots">
+          <span class="active"></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-btn secondary" id="onboarding-skip">跳过</button>
+          <button class="onboarding-btn primary" id="onboarding-next">下一步</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="help-btn" id="help-btn" aria-label="使用说明">?</button>
+
     <main class="app-shell">
       <!-- Topbar — fades out after 3s -->
       <div class="topbar" id="topbar">
